@@ -19,7 +19,7 @@ if (!global.mongoose) {
   global.mongoose = cached;
 }
 
-// * Establishes a connection to MongoDB usign Mongoose.
+// * Establishes a connection to MongoDB using Mongoose.
 // * Caches the connection to prevent multiple connections during development hot reloads.
 // * @returns Promise resolving to the Mongoose instance
 
@@ -49,7 +49,7 @@ async function connectDB(): Promise<typeof mongoose> {
   }
 
   try {
-    // Wait for the connecion to establish
+    // Wait for the connection to establish
     cached.conn = await cached.promise
   } catch (error) {
     // Reset promise on error to allow retry

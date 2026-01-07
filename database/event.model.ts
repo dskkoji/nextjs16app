@@ -1,5 +1,5 @@
 import { Schema, model, models, Document } from 'mongoose'
-import { Tube } from 'ogl';
+
 
 // TypeScript interface for Event document
 export interface IEvent extends Document {
@@ -73,7 +73,7 @@ const EventSchema = new Schema<IEvent>(
     mode: {
       type: String,
       required: [true, 'Mode is required'],
-      enumm: {
+      enum: {
         values: ['online', 'offline', 'hybrid'],
         message: 'Mode must be either online , offline, or hybrid',
       }
@@ -91,12 +91,17 @@ const EventSchema = new Schema<IEvent>(
         message: 'At least one agenda item is required',
       },
     },
+    organizer: {
+      type: String,
+      required: [true, 'Organizer is required'],
+      trim: true,
+    },
     tags: {
       type: [String],
       required: [true, 'Tags are required'],
       validate: {
         validator: (v: string[]) => v.length > 0,
-        message: 'At least one tag i required',
+        message: 'At least one tag is required',
       }
     },
   },
@@ -177,7 +182,7 @@ function normalizeTime(timeString: string): string {
 EventSchema.index({ slug: 1 },  { unique: true  })
 
 // Create compound index for common queries
-EventSchema.index({ date: 1, model: 1 })
+EventSchema.index({ date: 1, mode: 1 })
 
 const Event = models.Event || model<IEvent>('Event', EventSchema)
 
