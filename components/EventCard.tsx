@@ -32,7 +32,7 @@ const EventCard = ({
 
   return (
     <Link
-      href={`/events`}
+      href={`/events/${slug}`}
       id="event-card"
       onClick={handleClick}
     >

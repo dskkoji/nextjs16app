@@ -5,7 +5,7 @@ type MongooseCache = {
   promise: Promise<typeof mongoose> | null;
 }
 
-declare global {
+declare global { 
   // eslint-disable-next-line no-var
   var mongoose: MongooseCache | undefined;
 }
