@@ -1,11 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
-import connectDB from "@/lib/mongodb";
-import Event from "@/database/event.model";
+import { NextRequest, NextResponse } from 'next/server'
 import { v2 as cloudinary } from 'cloudinary'
+
+import connectDB from '@/lib/mongodb'
+import Event from '@/database/event.model'
 
 export async function POST(req: NextRequest) {
   try {
-    await connectDB();
+    await connectDB()
 
     const formData = await req.formData()
 
@@ -14,17 +15,15 @@ export async function POST(req: NextRequest) {
     try {
       event = Object.fromEntries(formData.entries())
     } catch (e) {
-      return NextResponse.json({ message: 'Invalid JSON data format'} ,{ status: 400 })
+      return NextResponse.json({ message: 'Invalid JSON data format' })
     }
 
     const file = formData.get('image') as File
-    
 
-    if (!file) return NextResponse.json({ message: 'Image file is required '}, { status: 400 })
+    if (!file) return NextResponse.json({ message: 'Image file is required' }, { status: 400 })
 
     let tags = JSON.parse(formData.get('tags') as string)
     let agenda = JSON.parse(formData.get('agenda') as string)
-
 
     const arrayBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
@@ -32,53 +31,33 @@ export async function POST(req: NextRequest) {
     const uploadResult = await new Promise((resolve, reject) => {
       cloudinary.uploader.upload_stream({ resource_type: 'image', folder: 'DevEvent' }, (error, results) => {
         if (error) return reject(error)
-
           resolve(results)
-      }).end(buffer)
+        }).end(buffer)
     })
-    
-    event.image = (uploadResult as { secure_url: string }).secure_url
 
-    const requiredFields =  ['title', 'description', 'date', 'location']
-    for (const field of requiredFields) {
-      if (!event[field]) {
-        return NextResponse.json({ message: `Missing required field: ${field}`}, { status: 400 })
-      }
-    }
-    
+    event.image = (uploadResult as { secure_url: string }).secure_url;
+
     const createdEvent = await Event.create({
       ...event,
       tags: tags,
       agenda: agenda,
     })
 
-    return NextResponse.json({ message: 'Event created successfully', event: createdEvent }, { status: 201 })
-
+    return NextResponse.json({ message: 'Event created successfully', event: createdEvent }, { status: 200 })
   } catch (e) {
-    console.error(e);
-    return NextResponse.json(
-      {
-        message: "Event Creation Failed",
-        error: e instanceof Error ? e.message : "unknown",
-      },
-      { status: 500 }
-    );
+    console.error(e)
+    return NextResponse.json({ message: 'Event creation Failed', error: e instanceof Error ? e.message : 'Unknown' }, { status:500 })
   }
 }
 
 export async function GET() {
-  try { 
+  try {
     await connectDB()
 
     const events = await Event.find().sort({ createdAt: -1 })
 
-    return NextResponse.json({ message: 'Events fetched successfully', events }, { status: 200 })
+    return NextResponse.json({ message: 'Events fetched successfully' }, { status: 200 })
   } catch (e) {
-    console.error('Event fetching failed:', e)
-    return NextResponse.json({
-      message: 'Event fetching failed',
-      error: e instanceof Error ? e.message : 'Unknown'
-    }, { status: 500 })
-    // return NextResponse.json({ message: 'Event fetching failed', error: e }, { status: 500 })
+    return NextResponse.json({ message: 'Event fetching failed', error: e }, { status: 500 })
   }
 }
