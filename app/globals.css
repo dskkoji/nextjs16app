@@ -263,6 +263,14 @@
                 input {
                     @apply bg-dark-200 rounded-[6px] px-5 py-2.5;
                 }
+
+                textarea {
+                    @apply bg-dark-200 rounded-[6px] px-5 py-2.5
+                }
+
+                select {
+                    @apply bg-dark-200 rounded-[6px] px-5 py-2.5
+                }
             }
 
             button {
