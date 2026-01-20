@@ -31,13 +31,13 @@ export async function GET(
 
     if (!event) {
       return NextResponse.json(
-        { message: (`Event with slug '${sanitalizedSlug}' not found `) },
+        { message: `Event with slug '${sanitalizedSlug}' not found` },
         { status: 404 }
       )
     }
 
     return NextResponse.json(
-      { message: 'Event fetched successfully!', event },
+      { message: 'Event fetched successfully', event },
       { status: 200 }
     )
   } catch (error) {
@@ -46,6 +46,13 @@ export async function GET(
     }
 
     if (error instanceof Error) {
+      if (error.message.includes('MONGODB_URI')) {
+        return NextResponse.json(
+          { message: 'Database configuration error' },
+          { status: 500 }
+        )
+      }
+
       return NextResponse.json(
         { message: 'Failed to fetch events', error: error.message },
         { status: 500 }
