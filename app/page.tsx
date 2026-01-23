@@ -7,8 +7,8 @@ import events from '@/lib/constants'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
 const Page = async () => {
-  // // 'use cache'
-  // // cacheLife('minutes')
+  'use cache'
+  cacheLife('minutes')
   // const response = await fetch(`${BASE_URL}/api/events`)
   // const { events } = await response.json()
 
