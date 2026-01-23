@@ -4,6 +4,7 @@ import { getSimilarEventsBySlug } from '@/lib/actions/event.actions'
 import Image from 'next/image'
 import BookEvent from '@/components/BookEvent'
 import EventCard from '@/components/EventCard'
+import DeleteEventButton from './DeleteEventButton'
 import { cacheLife } from 'next/cache'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
@@ -144,6 +145,8 @@ const EventDetails = async ({ params }: { params: Promise<string> }) => {
               )}
 
               <BookEvent eventId={event._id} slug={event.slug} />
+
+              <DeleteEventButton slug={event.slug}/>
           </div>
         </aside>
       </div>

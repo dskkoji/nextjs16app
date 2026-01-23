@@ -65,3 +65,38 @@ export async function GET(
     )
   }
 }
+
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: RouteParams 
+): Promise<NextResponse> {
+  try {
+    await connectDB()
+
+    const { slug } = await params
+
+    if (!slug || typeof slug !== 'string' || slug.trim() === "") {
+      return NextResponse.json(
+        { messege: 'Invalid or missing parameter' }, 
+        { status: 400 }
+      )
+    }
+
+    const sanitalizedSlug = slug.trim().toLowerCase()
+
+    const deletedEvent = await Event.deleteOne({ slug: sanitalizedSlug })
+    if (!deletedEvent) {
+      return NextResponse.json(
+        { message: 'Delete Event not found' },
+        { status: 404 }
+      )
+    }
+    return NextResponse.json(
+      { message: 'Event deleted' },
+      { status: 201 }
+    )
+  } catch (e) {
+    return NextResponse.json({ message: 'Event Deleting failed', error: e }, { status: 500 })
+  }
+}

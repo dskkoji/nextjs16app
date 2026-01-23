@@ -51,7 +51,7 @@ const EventCard = ({
       <div className="datetime">
         <div>
           <Image 
-            src='icons/calendar.svg'
+            src='/icons/calendar.svg'
             alt="date"
             width={14}
             height={14}
