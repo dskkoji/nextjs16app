@@ -1,10 +1,7 @@
-
-import { useState } from 'react'
-const ImageUpload = ({ image }: { image: string }) => {
-  const [file,setFile] = useState(image)
-  const handleChangeFile = (e: any) => {
-    if (e.target.files.length !== 0) {
-      setFile(e.target.files[0])
+const ImageUpload = ({ image, onImageChange }: { image: any; onImageChange: (file: File) => void }) => {
+  const handleChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length !== 0) {
+      onImageChange(e.target.files[0])
     }
   }
 
@@ -13,7 +10,7 @@ const ImageUpload = ({ image }: { image: string }) => {
       type="file"
       id="image"
       accept="image/*"
-      onChange={(e: any) => handleChangeFile(e)}
+      onChange={handleChangeFile}
     />
   )
 }
